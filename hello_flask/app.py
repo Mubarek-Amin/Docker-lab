@@ -17,7 +17,7 @@ def hello_world():
     cur = db.cursor()
     cur.execute("SELECT VERSION()")
     version = cur.fetchone()
-    return f'Hello, mate its Amin Mubareks web page! MySQL version: {version[0]}'
+    return f'Welcome to my world! Here you can find my projects!  MySQL version: {version[0]}'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002)

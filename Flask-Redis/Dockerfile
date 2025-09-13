@@ -2,12 +2,11 @@ FROM python:3.8-slim
 
 WORKDIR /app
 
-COPY requiremnts.txt ./
-
-RUN pip install --no-cache-dir -r requiremnts.txt
-
 COPY . .
 
-EXPOSE 5000
+RUN pip install flask redis
 
-CMD ["python" "app.py"]
+
+EXPOSE 5005
+
+CMD ["python" ,"app.py"]

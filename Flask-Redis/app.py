@@ -1,8 +1,8 @@
 from flask import Flask 
-import Redis
+import redis
 
 app = Flask(__name__)
-redis_client = Redis(host = 'redis', port= 6379)
+redis_client = redis(host = 'redis', port= 6379)
 
 @app.route('/')
 def welcome():
@@ -13,8 +13,7 @@ def welcome():
 @app.route('/count')
 def count():
     count = redis_client.incr('visitor_count')
-    return "This page has been visited this many times :{count}"
+    return f"This page has been visited this many times :{count}"
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port = 5000)
-    
+    app.run(host = '0.0.0.0', port = 5005)

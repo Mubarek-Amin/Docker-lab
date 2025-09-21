@@ -1,120 +1,111 @@
-Docker-Lab
+# Docker‑Lab
 
-A collection of small Docker labs / experiments using Flask, Redis, and related tooling.
+A collection of small Docker labs and experiments focused on containerising Python (Flask) apps and wiring them to services like Redis. Use this repo to learn, tinker, and iterate.
 
-Table of Contents
+<p align="left">
+  <a href="https://github.com/Mubarek-Amin/Docker-lab">
+    <img alt="last commit" src="https://img.shields.io/github/last-commit/Mubarek-Amin/Docker-lab">
+  </a>
+  <a href="https://github.com/Mubarek-Amin/Docker-lab">
+    <img alt="top language" src="https://img.shields.io/github/languages/top/Mubarek-Amin/Docker-lab">
+  </a>
+  <img alt="docker" src="https://img.shields.io/badge/docker-ready-blue">
+</p>
 
-Overview
+---
 
-Structure
+## Contents
 
-Getting Started
+- [What you’ll learn](#what-youll-learn)
+- [Repo structure](#repo-structure)
+- [Prerequisites](#prerequisites)
+- [Quick start](#quick-start)
+  - [Hello Flask](#hello-flask)
+  - [Flask + Redis](#flask--redis)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
-Usage
+---
 
-Prerequisites
+## What you’ll learn
 
-Contributing
+- How to containerise a simple Flask app with a `Dockerfile`.
+- How to run multiple services locally with Docker Compose (e.g., Flask + Redis).
+- How to pass environment variables, expose ports, and persist data (basics).
 
-License
+## Repo structure
 
-Overview
+```
+.
+├─ Flask-Redis/     # Flask app that talks to Redis (usually via docker compose)
+└─ hello_flask/     # Minimal Flask “hello world” in a single container
+```
 
-This repository is meant as a learning playground to explore how to containerize applications (especially Python/Flask apps), integrate with caching/databases/services (like Redis), and use Docker (and Docker Compose) to orchestrate them.
+> Tip: each folder is a self‑contained lab with its own files (app code, Dockerfile, and possibly `docker-compose.yml`).
 
-Use-cases include:
+## Prerequisites
 
-Running a Flask app inside Docker.
+- Docker Desktop (or Docker Engine)
+- (Optional) Docker Compose v2 (usually included with modern Docker Desktop)
+- Python 3.x (optional, only if you want to run apps locally outside of Docker)
 
-Connecting Flask with Redis.
+## Quick start
 
-Experimenting with multiple containers.
+First, clone this repository:
 
-Seeing how basic services communicate in a Docker environment.
-
-Structure
-
-Here’s how the repository is organised:
-
-Docker-lab/
-├── hello_flask/        # A minimal Flask app example
-├── Flask-Redis/        # Flask app + Redis integration example
-└── README.md
-
-
-hello_flask/ — Simple Flask app, “hello world”-style, ideal for first Dockerising steps.
-
-Flask-Redis/ — More advanced: shows how to connect Flask to Redis, often via Docker or Docker Compose.
-
-Prerequisites
-
-Before you begin, make sure you have installed:
-
-Docker
-
-Docker Compose (if using compose setups)
-
-Python 3.x
-
-(Optional) pip / virtualenv if running Flask locally
-
-Getting Started
-
-Here are common steps to run the examples.
-
-Clone the repo
-
+```bash
 git clone https://github.com/Mubarek-Amin/Docker-lab.git
 cd Docker-lab
+```
 
+### Hello Flask
 
-Choose a lab to run, e.g.:
+Build and run the minimal Flask app:
 
-hello_flask/
+```bash
+# from repo root
+docker build -t hello-flask ./hello_flask
+docker run --rm -p 5000:5000 hello-flask
+```
 
-Flask-Redis/
+Open: http://localhost:5000
 
-Build / run with Docker:
+> If your app uses a different port, update the `-p` mapping accordingly.
 
-If the lab has a Dockerfile only:
+### Flask + Redis
 
-cd hello_flask
-docker build -t hello-flask .
-docker run -p 5000:5000 hello-flask
+Spin up Flask (web) and Redis with Compose:
 
-
-If using Docker Compose (for multi-service, e.g. Flask + Redis):
-
+```bash
 cd Flask-Redis
-docker-compose up --build
+docker compose up --build
+```
 
+Then visit: http://localhost:5000
 
-Access the app in your web browser:
+> Common pattern: a `web` service (Flask) depends_on a `redis` service. If your compose file uses a different service name or port (e.g. `8080`), adjust the command and URL as needed.
 
-Usually at http://localhost:5000/ (or another port if configured).
+## Troubleshooting
 
-Usage and Features
+- **Port already in use**: Stop whatever is bound to the port or change the left side of `-p`, e.g. `-p 8080:5000`.
+- **Module not found / requirements not installed**: Rebuild the image after editing `requirements.txt`:
+  ```bash
+  docker compose build --no-cache
+  # or for the single-image lab
+  docker build --no-cache -t hello-flask ./hello_flask
+  ```
+- **Can’t reach Redis from Flask**: In Docker Compose, connect to Redis via its **service name** (e.g. `redis`) rather than `localhost`.
+- **Windows line endings**: If entrypoints fail on Windows, ensure shell scripts are LF (`
+`) not CRLF.
 
-Each lab demonstrates a concept:
+## Contributing
 
-Basic Flask server inside container.
+PRs welcome! Ideas:
+- Add new labs (e.g., Flask + Postgres, Celery workers, Nginx as reverse proxy).
+- Improve Dockerfiles (multi‑stage builds, slimmer images).
+- Expand docs with diagrams or screenshots.
 
-Flask + Redis caching or usage.
+## License
 
-Multi-container setups (app + data/cache services).
-
-You can modify code, rebuild containers, and see how changes propagate.
-
-Use for learning how networking works in Docker, how environment variables can be passed, how persistent data (if configured) behaves, etc.
-
-Contributing
-
-Suggestions welcome! If you want to:
-
-Add another lab (e.g. Flask + PostgreSQL, or Flask + Celery + Redis)
-
-Improve existing labs (better Dockerfile, more configurations)
-
-Fix issues / documentation
-
-Please open a pull request or an issue.
+If you add a license file (e.g., `LICENSE` with MIT), mention it here.
